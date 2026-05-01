@@ -1,27 +1,33 @@
-/* Reset */
+/* ========== RESET ========== */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f6f8;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, #eef2f3, #dfe9f3);
 }
 
-/* Main Container */
+/* Prevent overflow issue */
+* {
+  box-sizing: border-box;
+}
+
+/* ========== CONTAINER ========== */
 .container {
   max-width: 500px;
   margin: 50px auto;
   background: white;
   padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
 
-/* Title */
+/* ========== TITLE ========== */
 .title {
   text-align: center;
   margin-bottom: 20px;
+  font-weight: 600;
 }
 
-/* Input Section */
+/* ========== INPUT SECTION ========== */
 .inputBox {
   display: flex;
   gap: 10px;
@@ -29,101 +35,288 @@ body {
 
 .inputBox input {
   flex: 1;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
   outline: none;
+  font-size: 14px;
+}
+
+.inputBox input:focus {
+  border-color: #4cafef;
+  box-shadow: 0 0 0 2px rgba(76, 175, 239, 0.2);
 }
 
 .inputBox button {
-  padding: 10px 15px;
+  padding: 12px 18px;
   border: none;
   background: #4cafef;
   color: white;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   transition: 0.3s;
+  font-weight: 500;
 }
 
 .inputBox button:hover {
   background: #3a9edc;
 }
 
-/* Todo List */
+/* ========== TODO LIST ========== */
 .todoList {
   margin-top: 20px;
 }
 
-/* Each Todo Item */
+/* ========== TODO ITEM ========== */
 .todoItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: #fafafa;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 10px;
   margin-bottom: 10px;
   gap: 10px;
+  transition: 0.2s;
 }
 
-/* Left side (checkbox + text) */
+.todoItem:hover {
+  background: #f1f1f1;
+  transform: translateY(-2px);
+}
+
+/* Left */
 .left {
   display: flex;
   align-items: center;
   gap: 10px;
   flex: 1;
-  min-width: 0;
 }
 
-/* Text handling for long content */
-.left span {
-  word-break: break-word;
-  overflow-wrap: anywhere;
-}
-
-/* Completed task */
 .completed {
   text-decoration: line-through;
   color: gray;
 }
 
-/* Buttons container */
+/* Buttons */
 .actions {
   display: flex;
-  gap: 5px;
-  flex-shrink: 0;
+  gap: 6px;
 }
 
-/* Buttons */
 .actions button {
   padding: 6px 10px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 
-/* Edit Button */
+/* Edit */
 .actions button:first-child {
-  background: orange;
+  background: #ffa726;
   color: white;
 }
 
 .actions button:first-child:hover {
-  background: #e69500;
+  background: #fb8c00;
 }
 
-/* Delete Button */
+/* Delete */
 .actions button:last-child {
-  background: red;
+  background: #ef5350;
   color: white;
 }
 
 .actions button:last-child:hover {
-  background: #cc0000;
+  background: #d32f2f;
 }
 
-/* Optional: Smooth hover effect for todo item */
-.todoItem:hover {
+/* ========== MODAL ========== */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+}
+
+.modal {
+  width: 90%;
+  max-width: 400px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+
+  animation: modalFade 0.25s ease;
+}
+
+/* Modal body */
+.modalBody {
+  margin-top: 15px;
+}
+
+/* Fix input overflow */
+.modal input {
+  width: 100%;
+  max-width: 100%;
+  display: block;
+}
+
+/* Header */
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalHeader h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Close button */
+.closeBtn {
   background: #f1f1f1;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  background: #e0e0e0;
+}
+
+/* Input */
+.modal input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+}
+
+.modal input:focus {
+  border-color: #4cafef;
+  box-shadow: 0 0 0 2px rgba(76, 175, 239, 0.2);
+}
+
+/* Buttons */
+.modalActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modalActions button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Save */
+.saveBtn {
+  background: #4cafef;
+  color: white;
+}
+
+.saveBtn:hover {
+  background: #3a9edc;
+}
+
+/* Cancel */
+.cancelBtn {
+  background: #f1f1f1;
+}
+
+/* Animation */
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* Delete text */
+.deleteText {
+  font-size: 15px;
+  color: #444;
+  text-align: center;
+}
+
+/* Delete confirm button */
+.deleteConfirmBtn {
+  background: #ef5350;
+  color: white;
+}
+
+.deleteConfirmBtn:hover {
+  background: #d32f2f;
+}
+
+/* ========== RESPONSIVE ========== */
+
+/* Tablet */
+@media (max-width: 768px) {
+  .container {
+    margin: 30px 15px;
+    padding: 20px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .container {
+    margin: 20px 10px;
+    padding: 15px;
+  }
+
+  .inputBox {
+    flex-direction: column;
+  }
+
+  .inputBox button {
+    width: 100%;
+  }
+
+  .todoItem {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .actions button {
+    flex: 1;
+  }
+
+  .modal {
+    width: 95%;
+  }
+
+  .modalActions {
+    flex-direction: column;
+  }
 }
