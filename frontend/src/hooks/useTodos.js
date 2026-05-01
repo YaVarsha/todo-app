@@ -11,18 +11,21 @@ export const useTodos = () => {
   const [task, setTask] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // ✅ NEW STATES (IMPORTANT)
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
   // ✅ FETCH TODOS
   const fetchTodos = async () => {
     try {
       setLoading(true);
       const res = await getTodos();
 
-      console.log("FETCH DATA:", res.data); // 🔍 DEBUG
-
-      setTodos([...res.data]); // ✅ force re-render
+      setTodos([...res.data]);
+      setError("");
     } catch (error) {
       console.error("FETCH ERROR:", error);
-      alert("Error fetching todos");
+      setError("Error fetching todos");
     } finally {
       setLoading(false);
     }
@@ -32,51 +35,55 @@ export const useTodos = () => {
     fetchTodos();
   }, []);
 
-  // ✅ ADD TODO (UPDATED WITH DEBUG)
+  // ✅ ADD TODO
   const addTodo = async () => {
     try {
-      if (!task.trim()) return alert("Enter task");
-
-      console.log("SENDING TASK:", task); // 🔍 DEBUG
+      // ❗ VALIDATION
+      if (task.trim() === "") {
+        setError("Please enter a task");
+        return;
+      }
 
       const res = await createTodo({ task });
 
-      console.log("CREATE RESPONSE:", res.data); // 🔍 DEBUG
-
       setTask("");
+      setError("");
+      setSuccess("Task added successfully ✅");
 
-      await fetchTodos(); // ✅ important
+      await fetchTodos();
     } catch (error) {
-      console.error("CREATE ERROR:", error); // 🔥 IMPORTANT
-      alert("Failed to add task");
+      console.error("CREATE ERROR:", error);
+      setError("Failed to add task");
     }
   };
 
   // ✅ DELETE TODO
   const deleteTodo = async (id) => {
     try {
-      console.log("DELETE ID:", id); // 🔍 DEBUG
-
       await removeTodo(id);
+
+      setSuccess("Task deleted ✅");
+      setError("");
 
       await fetchTodos();
     } catch (error) {
       console.error("DELETE ERROR:", error);
-      alert("Failed to delete task");
+      setError("Failed to delete task");
     }
   };
 
   // ✅ UPDATE TODO
   const updateTodo = async (id, data) => {
     try {
-      console.log("UPDATE:", id, data); // 🔍 DEBUG
-
       await updateTodoApi(id, data);
+
+      setSuccess("Task updated ✅");
+      setError("");
 
       await fetchTodos();
     } catch (error) {
       console.error("UPDATE ERROR:", error);
-      alert("Failed to update");
+      setError("Failed to update task");
     }
   };
 
@@ -88,5 +95,7 @@ export const useTodos = () => {
     deleteTodo,
     updateTodo,
     loading,
+    error,     // ✅ expose error
+    success,   // ✅ expose success
   };
 };

@@ -6,7 +6,16 @@ import DeleteModal from "./components/DeleteModal.jsx";
 import { useTodos } from "./hooks/useTodos.js";
 
 function App() {
-  const { todos, task, setTask, addTodo, deleteTodo, updateTodo } = useTodos();
+  const {
+    todos,
+    task,
+    setTask,
+    addTodo,
+    deleteTodo,
+    updateTodo,
+    error,
+    success,
+  } = useTodos();
 
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [currentTask, setCurrentTask] = useState(null);
@@ -26,11 +35,15 @@ function App() {
   };
 
   const handleSaveEdit = (updatedText) => {
-    if (!currentTask) return; // ✅ safety
+    if (!currentTask) return;
+
+    if (!updatedText.trim()) {
+      return; // optional: you can also set error here if needed
+    }
 
     updateTodo(currentTask._id, { task: updatedText });
     setIsEditOpen(false);
-    setCurrentTask(null); // ✅ reset
+    setCurrentTask(null);
   };
 
   // ✅ Delete
@@ -40,11 +53,11 @@ function App() {
   };
 
   const confirmDelete = () => {
-    if (!selectedId) return; // ✅ safety
+    if (!selectedId) return;
 
     deleteTodo(selectedId);
     setIsDeleteOpen(false);
-    setSelectedId(null); // ✅ reset
+    setSelectedId(null);
   };
 
   return (
@@ -57,16 +70,24 @@ function App() {
           type="text"
           placeholder="Enter task..."
           value={task}
-          onChange={(e) => setTask(e.target.value)}
+          onChange={(e) => {
+            setTask(e.target.value);
+          }}
         />
-        <button onClick={addTodo}>Add</button>
+        <button onClick={addTodo}>
+          Add
+        </button>
       </div>
+
+      {/* ✅ ERROR & SUCCESS MESSAGE */}
+      {error && <div className="message error">{error}</div>}
+      {success && <div className="message success">{success}</div>}
 
       {/* ✅ TODO LIST */}
       <div className="todoList">
         {todos.map((todo) => (
           <TodoItem
-            key={todo._id} // ✅ IMPORTANT
+            key={todo._id}
             todo={todo}
             toggleComplete={toggleComplete}
             openEditModal={handleEditClick}
@@ -91,6 +112,6 @@ function App() {
       />
     </div>
   );
-
 }
-export default App
+
+export default App;
