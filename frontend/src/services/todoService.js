@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/todos";
+const API = "https://todo-app-cvnd.onrender.com/api/todos";
 
 export const getTodos = () => axios.get(API);
 
