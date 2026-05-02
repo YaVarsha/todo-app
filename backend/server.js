@@ -17,7 +17,7 @@ mongoose.connect(process.env.MONGO_URL)
   .catch(err => console.log(err));
 
 // Routes
-app.use("/todos", todoRoutes);
+app.use("/api/todos", todoRoutes);
 
 // Server
 app.listen(process.env.PORT, () => {
