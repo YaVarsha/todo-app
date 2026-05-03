@@ -1,48 +1,41 @@
 import Todo from "../models/TodoList.js";
 
 // ✅ CREATE
-export const createTodo = async (req, res) => {
+export const createTodo = async (req, res, next) => {
   try {
-    console.log("BODY RECEIVED:", req.body); // 🔍 DEBUG
-
     const { task } = req.body;
 
     if (!task || task.trim() === "") {
-      return res.status(400).json({ error: "Task required" });
+      const error = new Error("Task required");
+      error.status = 400;
+      return next(error); // ✅ pass to global handler
     }
 
     const newTodo = new Todo({
-      task: task,
+      task,
       completed: false,
     });
 
-    const savedTodo = await newTodo.save(); // ✅ FORCE SAVE
-
-    console.log("SAVED TODO:", savedTodo); // 🔍 DEBUG
+    const savedTodo = await newTodo.save();
 
     res.status(201).json(savedTodo);
   } catch (err) {
-    console.error("CREATE ERROR:", err);
-    res.status(500).json({ error: err.message });
+    next(err); // ✅ IMPORTANT
   }
 };
 
 // ✅ READ
-export const getTodos = async (req, res) => {
+export const getTodos = async (req, res, next) => {
   try {
     const todos = await Todo.find().sort({ createdAt: -1 });
-
-    console.log("FETCH TODOS:", todos); // 🔍 DEBUG
-
     res.json(todos);
   } catch (err) {
-    console.error("FETCH ERROR:", err);
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 // ✅ UPDATE
-export const updateTodo = async (req, res) => {
+export const updateTodo = async (req, res, next) => {
   try {
     const updated = await Todo.findByIdAndUpdate(
       req.params.id,
@@ -50,25 +43,31 @@ export const updateTodo = async (req, res) => {
       { new: true }
     );
 
-    console.log("UPDATED TODO:", updated); // 🔍 DEBUG
+    if (!updated) {
+      const error = new Error("Todo not found");
+      error.status = 404;
+      return next(error);
+    }
 
     res.json(updated);
   } catch (err) {
-    console.error("UPDATE ERROR:", err);
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 // ✅ DELETE
-export const deleteTodo = async (req, res) => {
+export const deleteTodo = async (req, res, next) => {
   try {
-    await Todo.findByIdAndDelete(req.params.id);
+    const deleted = await Todo.findByIdAndDelete(req.params.id);
 
-    console.log("DELETED ID:", req.params.id); // 🔍 DEBUG
+    if (!deleted) {
+      const error = new Error("Todo not found");
+      error.status = 404;
+      return next(error);
+    }
 
     res.json({ message: "Deleted" });
   } catch (err) {
-    console.error("DELETE ERROR:", err);
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };

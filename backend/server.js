@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import todoRoutes from "./routes/todoRoutes.js";
+import errorHandler from "./middleware/errorHandler.js";
+
 
 dotenv.config();
 
@@ -10,6 +12,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(errorHandler);
 
 // DB connection
 mongoose.connect(process.env.MONGO_URL)
